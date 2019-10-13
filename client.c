@@ -12,16 +12,16 @@ int main(int argc, char* argv[]) {
     char buffer[256+1];
     struct sockaddr_in servAddr;
     // Check and set program arguments
-    printf("argc: %d", argc);
+    //printf("\nargc: %d", argc);
     if (argc < 4) {
         printf("Error: three arguments are neded!");
         exit(1);
     }
-    printf("Setting info");
+    //printf("\nSetting info");
     servName = argv[1];
     servPort = atoi(argv[2]);
     string = argv[3];
-    printf("Info Recieved: %s %d %s", servName, servPort, string);
+    //printf("\nInfo Recieved: %s %d %s", servName, servPort, string);
     // Bind server socket address
     memset(&servAddr, 0, sizeof(servAddr));
     servAddr.sin_family = AF_INET;
@@ -29,16 +29,16 @@ int main(int argc, char* argv[]) {
     servAddr.sin_port = htons(servPort);
     // Create socket
     if ((s = socket(PF_INET, SOCK_DGRAM, 0)) < 0) {
-        perror("Error: Socket failed!");
+        perror("\nError: Socket failed!");
         exit(1);
     }
-    // Send echo string
+//    // Send echo string
     len = sendto(s, string, strlen(string), 0, (struct sockaddr *) &servAddr, sizeof(servAddr));
     //Recieve echo string
     recvfrom(s, buffer, len, 0, NULL, NULL);
     //Print and verify echoed string
     buffer[len] = '\0';
-    printf("Echo string received: ");
+    printf("\nRecieved: ");
     fputs(buffer, stdout);
     close(s);
     exit(0);
