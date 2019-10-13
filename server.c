@@ -11,7 +11,6 @@ int main(int argc, char* argv[]) {
     int len1 = 10;
     char buffer[256];
     char buffer1[256] = "testreturn";
-    //char* string;
     struct sockaddr_in servAddr;
     struct sockaddr_in clntAddr;
     
@@ -20,8 +19,6 @@ int main(int argc, char* argv[]) {
         exit(1);
     }
     port = atoi(argv[1]);
-    //string = argv[2];
-    //len1 = sizeof(buffer1) / sizeof(int);
     
     socklen_t clntAddrLen;
     // Build local server socket address
@@ -44,8 +41,18 @@ int main(int argc, char* argv[]) {
     
     while (breakWhile == 0) {
         len = recvfrom(s, buffer, sizeof(buffer), 0, (struct sockaddr *) &clntAddr, &clntAddrLen);
-        printf("Recieved %s", buffer);
-        sendto(s, buffer1, len1, 0, (struct sockaddr *) &clntAddr, sizeof(clntAddr));
+        
+        char *result = malloc(strlen(buffer) + strlen(argv[2]) + 1);
+        strcpy(result, buffer);
+        strcat(result, " ");
+        strcat(result, argv[2]);
+        printf("Returning %s", result);
+        
+        char length[5];
+        sprintf(length, "%lu", strlen(result));
+        sendto(s, length, strlen(length), 0, (struct sockaddr *) &clntAddr, sizeof(clntAddr));
+        sendto(s, result, strlen(result), 0, (struct sockaddr *) &clntAddr, sizeof(clntAddr));
+        
         printf("\n");
     }
 }
